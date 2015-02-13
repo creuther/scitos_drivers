@@ -1,0 +1,7 @@
+<root>
+	<namespace name="watchdog">
+		<unit id="BridgeWatchdogClient" class="mira::BridgeWatchdogClient">
+			<CycleTime>100</CycleTime> <!-- Send a watchdog 'OK' every 100ms -->
+		</unit>
+	</namespace>
+</root>

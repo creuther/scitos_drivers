@@ -20,7 +20,6 @@ class BridgeWatchdogClient : public Unit
 public:
 	// Spin with 100 milliseconds precision. This can be altered using the serialization interface
 	BridgeWatchdogClient() : Unit(Duration::milliseconds(100)) {
-		mMaxPingAge = Duration::seconds(2);
 	}
 
 	template<typename Reflector> void reflect(Reflector& r)
@@ -31,12 +30,12 @@ public:
 
 protected:
 	virtual void initialize() {
-		mWatchdogChannel = publish<std::string>("/BridgeWatchdog");
+		mWatchdogChannel = publish<std::string>(resolveName("BridgeWatchdog"));
 	}
 	
 	virtual void process(const Timer& timer) {
 		// Will get the current timestamp
-		mWatchdogChannel.post("OK");
+		mWatchdogChannel.post(std::string("OK"), Time::now());
 	}
 	
 protected:

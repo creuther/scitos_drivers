@@ -34,7 +34,7 @@ public:
 
 protected:
 	virtual void initialize() {
-		mWatchdogChannel = subscribe<std::string>("/BridgeWatchdog");
+		mWatchdogChannel = subscribe<std::string>(resolveName("BridgeWatchdog"));
 		
 		// Definitely wait until robot service is available.
 		waitForService("/robot/Robot", Duration::seconds(10));
@@ -46,7 +46,7 @@ protected:
 		// Get data from watchdog channel and check the timestamp
 		try {
 			auto read = mWatchdogChannel.read();
-			if(Duration(now - read->timestamp).totalMilliseconds() > mMaxPingAge)
+			if(Duration(now - read->timestamp) > mMaxPingAge)
 				triggerEmergencyStop();
 		} catch(...) {
 			// Something went wrong, we should definitely stop just in case

@@ -2,6 +2,18 @@
 <launch>
 	<!-- scitos_modules argument; must be a space seperated list of hardware modules to load -->
 	<arg name="SCITOS_MODULES" default="Drive Charger EBC Display Head"/>
+	
+	<!-- MIRA configuration that will be loaded by the scitos_node and connect to the MIRA framework below -->
+	<arg name="MIRA_CLIENT_CONFIG" default="$(find scitos_mira)/resources/BridgeWatchdogClient.xml"/>
+	
+	<!-- MIRA configuration for the framework running in a separate process. -->
+	<arg name="MIRA_FRAMEWORK_CONFIG" default="$(find scitos_mira)/resources/SCITOSDriver.xml"/>
+	
+	<!-- TCP port for both of the MIRA frameworks to communicate over -->
+	<arg name="MIRA_SERVER_PORT" default="1234"/>
+
+	<!-- Debug level to use for MIRA. Anwywhere between 0 (CRITICAL) and 5 (TRACE); the higher the more verbose -->
+	<arg name="MIRA_DEBUG_LEVEL" default="2"/>
 
 	<!-- Remote Launching -->
     <arg name="machine" default="localhost"/>
@@ -9,8 +21,15 @@
 
     <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true" />
 
-	<node pkg="scitos_mira" type="scitos_node" name="scitos_node" output="screen" respawn="true">
-		<param name="scitos_modules" value="$(arg SCITOS_MODULES)" />
+	<!-- Start the MIRA framework using the sh script and pass the necessary arguments -->
+	<node pkg="scitos_mira" type="startMiraFramework.sh" args="$(arg MIRA_FRAMEWORK_CONFIG) $(arg MIRA_SERVER_PORT) $(arg MIRA_DEBUG_LEVEL)" name="startMiraFramework" output="screen">
 	</node>
-
+	
+	<!-- Start ROS MIRA bridge -->
+	<node pkg="scitos_mira" type="scitos_node" name="scitos_node" output="screen" respawn="true">
+		<param name="config_file" value="$(arg MIRA_CLIENT_CONFIG)" type="string"/>
+		<param name="server_port" value="$(arg MIRA_SERVER_PORT)" type="string"/>
+		<param name="mira_debug_level" value="$(arg MIRA_DEBUG_LEVEL)" type="string"/>
+		<param name="scitos_modules" value="$(arg SCITOS_MODULES)"/>
+	</node>	
 </launch>

@@ -38,8 +38,33 @@ int main(int argc, char **argv) {
 
 	MIRA_LOGGER.registerSink(RosLogSink());
 	
-	std::string scitos_modules;
+	std::string config_file, server_port, debug_level, scitos_modules;
 	std::vector<std::string> args;
+	
+	// Start our watchdog client with the mira process
+	if(ros::param::get("~config_file", config_file))  {
+		args.push_back(std::string("-c"));
+		args.push_back(config_file);
+	} else {
+		// TODO: Throw exception / log something?
+	}
+	
+	// Connect to the main mira instance using the provided port
+	if(ros::param::get("~server_port", server_port))  {
+		args.push_back(std::string("-k"));
+		
+		std::stringstream ss;
+		ss << "127.0.0.1:" << server_port;
+		args.push_back(ss.str());
+	} else {
+		// TODO: Throw exception / log something?
+	}
+	
+	// Use the specified debug level
+	if(ros::param::get("~mira_debug_level", debug_level))  {
+		args.push_back(std::string("-d"));
+		args.push_back(debug_level);
+	}
 	
 	mira::Framework framework(args, true);
 	

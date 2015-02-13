@@ -1,8 +1,0 @@
-<?xml version="1.0" ?>
-<launch>
-	<!-- scitos_modules argument; must be a space seperated list of hardware modules to load -->
-	<arg name="SCITOS_CONFIG" default="$(find scitos_mira)/resources/SCITOSDriver.xml"/>
-	
-	<node pkg="scitos_mira" type="startMiraFramework.sh" args="$(arg SCITOS_CONFIG)" name="startMiraFramework" output="screen">
-	</node>
-</launch>

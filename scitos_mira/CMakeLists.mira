@@ -1,3 +1,4 @@
+##############################################################################
 
 message(STATUS "Detecting MIRA root directory")
 
@@ -58,7 +59,6 @@ set_target_properties(${target} PROPERTIES COMPILE_FLAGS -std=c++0x)
 target_link_libraries(${target} ${MIRAAutoLinkLibraries} MIRAFramework)
 ENDMACRO()
 
-
 # use, i.e. don't skip the full RPATH for the build tree
 SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
 
@@ -79,4 +79,9 @@ IF("${isSystemDir}" STREQUAL "-1")
    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 ENDIF("${isSystemDir}" STREQUAL "-1")
 
+##############################################################################
+
+include(CMakeLists.miraunits)
+
+##############################################################################
 
